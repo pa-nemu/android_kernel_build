@@ -1,0 +1,1 @@
+../../device/qcom/kernelscripts/build.sh
