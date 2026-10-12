@@ -254,8 +254,12 @@ for EXT_MOD in ${EXT_MODULES}; do
   module_path="$(echo "$EXT_MOD" | sed -e 's/^[\.\/]*//')"
   top_dir="$(echo "$module_path" | cut -d '/' -f 1)"
 
-  # Create a link to the module's tree within kernel_platform
-  (cd "$ROOT_DIR" && ln -fs "../${top_dir}")
+  # Create a link to the module's tree within kernel_platform when needed.
+  # Android build actions run with the source tree mounted read-only, so do
+  # not try to refresh an existing link from inside the sandbox.
+  if [ ! -e "${ROOT_DIR}/${top_dir}" ] && [ ! -L "${ROOT_DIR}/${top_dir}" ]; then
+    (cd "$ROOT_DIR" && ln -s "../${top_dir}")
+  fi
 
   # Search for the module package by looking up from the module_path
   pkg_path="$module_path"
