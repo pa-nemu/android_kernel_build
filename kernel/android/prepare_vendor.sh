@@ -261,6 +261,10 @@ if [ ! -f "${ROOT_DIR}/build/abl_extensions.bzl" ] \
       && [ -f "${ROOT_DIR}/bootable/bootloader/edk2/abl_extensions.bzl" ]; then
   ln -fs "../bootable/bootloader/edk2/abl_extensions.bzl" "${ROOT_DIR}/build/abl_extensions.bzl"
 fi
+if [ ! -e "${ROOT_DIR}/build/qcom_build_extensions" ] \
+      && [ -d "${ROOT_DIR}/msm-kernel/qcom_build_extensions" ]; then
+  ln -s "../msm-kernel/qcom_build_extensions" "${ROOT_DIR}/build/qcom_build_extensions"
+fi
 
 # If prepare_vendor.sh fails and nobody checked the error code, make sure the android build fails
 # by removing the kernel Image which is needed to build boot.img
