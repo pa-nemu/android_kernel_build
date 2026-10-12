@@ -276,7 +276,8 @@ if [ "${RECOMPILE_KERNEL}" == "1" ]; then
 
   # shellcheck disable=SC2086
   "${ROOT_DIR}/msm-kernel/build_with_bazel.py" \
-    -t "$KERNEL_TARGET" "$KERNEL_VARIANT" $LTO_KBUILD_ARG $PGO_KBUILD_ARG $GCOV_KBUILD_ARG $EXTRA_KBUILD_ARGS \
+    -t "$KERNEL_TARGET" "$KERNEL_VARIANT" -s abl -s abi \
+    $LTO_KBUILD_ARG $PGO_KBUILD_ARG $GCOV_KBUILD_ARG $EXTRA_KBUILD_ARGS \
     --out_dir "${ANDROID_KP_OUT_DIR}"
 
   COPY_NEEDED=1
