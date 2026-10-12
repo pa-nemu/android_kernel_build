@@ -111,7 +111,7 @@ if [ "$1" == "dtb-only" ]; then
   TARGET=$2
 
   BASE_DT=${ROOT_DIR}/../device/qcom/${TARGET}-kernel
-  TECHPACK_DT="${ROOT_DIR}/../out/target/product/${TARGET}/obj/DLKM_OBJ"
+  TECHPACK_DT="${ROOT_DIR}/../out/target/product/${TARGET}/obj/DLKM_OBJ/vendor"
 
   if [ ! -e "${BASE_DT}" ] || [ ! -e "${TECHPACK_DT}" ]; then
     echo "Either base dt or techpack dt is missing ..."
@@ -611,7 +611,7 @@ if [ -n "${ANDROID_PRODUCT_OUT}" ] && [ -n "${ANDROID_BUILD_TOP}" ]; then
         cd ${ROOT_DIR}
         OUT_DIR=${ANDROID_EXT_MODULES_OUT} ./build/android/merge_dtbs.sh \
           ${ANDROID_KERNEL_OUT}/kp-dtbs \
-          ${ANDROID_EXT_MODULES_COMMON_OUT} \
+          ${ANDROID_EXT_MODULES_COMMON_OUT}/vendor \
           ${ANDROID_KERNEL_OUT}/dtbs
     )
     echo "kpl-time-check Merging vendor devicetree end $(date +%H:%M:%S)"
