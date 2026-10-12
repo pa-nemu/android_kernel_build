@@ -270,17 +270,6 @@ for EXT_MOD in ${EXT_MODULES}; do
     fi
   done
 
-  set +e
-  grep_string='vendor/oplus'
-  oplus_kernel_module=$(echo ${module_path} | grep "${grep_string}")
-  echo "oplus_kernel_module is  $oplus_kernel_module"
-  if [[ "${oplus_kernel_module}" != "" ]]
-  then
-      echo "$grep_string is in $module_path default check bazel build "
-  else
-      echo "$grep_string in not in $module_path use default"
-  fi
-  set -e
   if [ "$TARGET_BOARD_PLATFORM" = "msmnile" ]; then
      btgt="gen3auto"
   elif [ "$TARGET_BOARD_PLATFORM" = "sm6150" ]; then
@@ -296,7 +285,7 @@ for EXT_MOD in ${EXT_MODULES}; do
   filter_regex="${btgt/_/-}_${VARIANT/_/-}_${SUBTARGET_REGEX:-.*}_dist$"
 
   # Query for a target that matches the pattern for module distribution
-  if [[ "$ENABLE_DDK_BUILD" = "true" || "$oplus_kernel_module" != "" ]] \
+  if [[ "$ENABLE_DDK_BUILD" = "true" ]] \
      && [ -n "$pkg_path" ] \
      && [ -n "$btgt" ] \
      && build_target=$(./tools/bazel query --ui_event_filters=-info --noshow_progress \
@@ -332,10 +321,6 @@ for EXT_MOD in ${EXT_MODULES}; do
     if [ -n "$EXTRA_DDK_ARGS" ]; then
       IFS=" " read -r -a extra_args <<< "$EXTRA_DDK_ARGS"
       build_flags+=("${extra_args[@]}")
-    fi
-
-    if [ -n "${OPLUS_KERNEL_MODULE_COVERAGE}" ]; then
-        build_flags+=("--kocov")
     fi
 
     if [ "$KERNEL_SANITIZER" == "kasan" ]; then
@@ -396,4 +381,3 @@ for EXT_MOD in ${EXT_MODULES}; do
   fi
   set +x
 done
-
