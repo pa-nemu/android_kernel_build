@@ -281,7 +281,10 @@ fi
 # Read environment variables and write to bzl file
 OPLUS_FEATURES=$(export|grep -e "^declare -x OPLUS_FEATURE_BSP_"|sed 's/declare -x //g'|sed 's/"//g'|tr '\n' ' ')
 # setup build parameters before building external modules
-./kernel_platform/oplus/bazel/oplus_modules_variant.sh ${KERNEL_TARGET} ${KERNEL_VARIANT} "${OPLUS_FEATURES}"
+if [ -x "${ROOT_DIR}/oplus/bazel/oplus_modules_variant.sh" ]; then
+  "${ROOT_DIR}/oplus/bazel/oplus_modules_variant.sh" \
+    ${KERNEL_TARGET} ${KERNEL_VARIANT} "${OPLUS_FEATURES}"
+fi
 
 ################################################################################
 if [ "${RECOMPILE_KERNEL}" == "1" ]; then
@@ -324,6 +327,12 @@ fi
 
 if [ "${RECOMPILE_ABL}" == "1" -o "${COPY_ABL_NEEDED}" == "1" ]; then
   rm -rf ${ANDROID_ABL_OUT_DIR}/abl-${TARGET_BUILD_VARIANT}
+fi
+
+# ABL is optional for products which use the bootloader shipped by the device.
+if [ ! -d "${ROOT_DIR}/bootable/bootloader/edk2" ]; then
+  RECOMPILE_ABL=0
+  COPY_ABL_NEEDED=0
 fi
 
 ################################################################################
