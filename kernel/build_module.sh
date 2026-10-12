@@ -287,12 +287,14 @@ for EXT_MOD in ${EXT_MODULES}; do
   fi
 
   filter_regex="${btgt/_/-}_${VARIANT/_/-}_${SUBTARGET_REGEX:-.*}_dist$"
+  bazel_startup_options=(--output_root="${OUT_DIR}/bazel")
 
   # Query for a target that matches the pattern for module distribution
   if [[ "$ENABLE_DDK_BUILD" = "true" ]] \
      && [ -n "$pkg_path" ] \
      && [ -n "$btgt" ] \
-     && build_target=$(./tools/bazel query --ui_event_filters=-info --noshow_progress \
+     && build_target=$(./tools/bazel "${bazel_startup_options[@]}" query \
+          --ui_event_filters=-info --noshow_progress \
           "filter('${filter_regex}', //${pkg_path}/...)") \
      && [ -n "$build_target" ]
   then
@@ -336,7 +338,8 @@ for EXT_MOD in ${EXT_MODULES}; do
     fi
 
     # Run the dist command passing in the output directory from Android build system
-    ./tools/bazel run "${build_flags[@]}" "$build_target" \
+    ./tools/bazel "${bazel_startup_options[@]}" run \
+      "${build_flags[@]}" "$build_target" \
       -- --dist_dir="${OUT_DIR}/${EXT_MOD_REL}"
 
     # The Module.symvers file is named "<target>_<variant>_Modules.symvers, but other modules are
