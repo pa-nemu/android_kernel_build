@@ -39,6 +39,25 @@ string_flag(
     visibility = ["//visibility:public"],
 )
 
+# If true, external modules are built against a MicroXR kernel target.
+bool_flag(
+    name = "microxr_kernel_build",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "microxr_kernel_build_true",
+    flag_values = {":microxr_kernel_build": "1"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "microxr_kernel_build_false",
+    flag_values = {":microxr_kernel_build": "0"},
+    visibility = ["//visibility:public"],
+)
+
 # The final LTO setting is "default" (use defconfig value).
 # If --lto=default, and none of --kasan/--kcsan, LTO is default
 selects.config_setting_group(
